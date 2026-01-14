@@ -2,27 +2,28 @@ name: Daily Exam Commit
 
 on:
   schedule:
-    - cron: '0 4 * * *' # 9:00 AM Pakistan time
-  workflow_dispatch: # allows manual run too
+    - cron: '0 4 * * *' # 9:00 AM Pakistan (UTC+5)
+  workflow_dispatch:
+
+permissions:
+  contents: write
 
 jobs:
   daily-commit:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout repo
-      uses: actions/checkout@v3
+      - name: Checkout repo
+        uses: actions/checkout@v4
 
-    - name: Add daily log
-      run: |
-        echo "Studied on $(date '+%Y-%m-%d %H:%M:%S')" >> study_log.md
+      - name: Add daily log
+        run: |
+          echo "Studied on $(date '+%Y-%m-%d %H:%M:%S')" >> study_log.md
 
-    - name: Commit changes
-      run: |
-        git config --global user.name "github-mahar"
-        git config --global user.email "github.675@gmail.com"
-        git add study_log.md
-        git commit -m "Daily exam log $(date '+%Y-%m-%d')" || echo "No changes to commit"
-        git push
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Commit changes
+        run: |
+          git config --global user.name "github-mahar"
+          git config --global user.email "github.675@gmail.com"
+          git add study_log.md
+          git commit -m "Daily exam log $(date '+%Y-%m-%d')" || echo "No changes"
+          git push
